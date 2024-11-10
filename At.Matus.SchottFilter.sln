@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.35325.158
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "At.Matus.SchottFilter", "At.Matus.SchottFilter.csproj", "{15DCA5D4-99EE-4C0A-BF6D-A0D21595664F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SchottTest", "..\SchottTest\SchottTest.csproj", "{B693C308-8B3E-4C2E-8055-025FF547694B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{15DCA5D4-99EE-4C0A-BF6D-A0D21595664F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{15DCA5D4-99EE-4C0A-BF6D-A0D21595664F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{15DCA5D4-99EE-4C0A-BF6D-A0D21595664F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{15DCA5D4-99EE-4C0A-BF6D-A0D21595664F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B693C308-8B3E-4C2E-8055-025FF547694B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B693C308-8B3E-4C2E-8055-025FF547694B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B693C308-8B3E-4C2E-8055-025FF547694B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B693C308-8B3E-4C2E-8055-025FF547694B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {49B2F4AE-3DAB-4121-89CD-5004363CD5B8}
+	EndGlobalSection
+EndGlobal
