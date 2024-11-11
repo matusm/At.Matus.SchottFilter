@@ -33,6 +33,30 @@ namespace At.Matus.SchottFilter
             return true;
         }
 
+        public double Fitness(SchottFilter filter)
+        {
+            double tauInBlockingRange = 0;
+            double tauInTransmissionRange = 0;
+            int numberInBlockingRange = 0;
+            int numberInTransmissionRange = 0;
+            for (int i = 0; i < fieldSize; i++)
+            {
+                double tau = filter.GetInternalTransmittance(i + minWavelength);
+                if (maximumPermissibleSpectralTransmittance[i] != 1)
+                {
+                    tauInBlockingRange += tau;
+                    numberInBlockingRange++;
+                }
+                if (minimumPermissibleSpectralTransmittance[i] != 0)
+                {
+                    tauInTransmissionRange += tau;
+                    numberInTransmissionRange++;
+                                }
+            }
+            double fitness = (tauInTransmissionRange / numberInTransmissionRange) / (tauInBlockingRange / numberInBlockingRange);
+            return fitness;
+        }
+
         private void _SetMinimumPermissibleSpectralTransmittance(int lowerIdx, int upperIdx, double tau)
         {
             if (lowerIdx > upperIdx) return;
