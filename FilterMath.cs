@@ -4,6 +4,19 @@ namespace At.Matus.SchottFilter
 {
     public static class FilterMath
     {
+        public static SchottFilter Combine(SchottFilter f1, double d1)
+        {
+            SchottFilter filter = new SchottFilter();
+            Parallel.For(200, 1101, i =>
+            {
+                filter.internalSpectralTransmittance[i - 200] = f1.GetInternalTransmittance(i, d1);
+            }
+            );
+            filter.Designation = $"{f1.Designation} : {d1:F2} mm";
+            filter.ReflectionFactor = f1.ReflectionFactor;
+            filter.ReferenceThickness = d1;
+            return filter;
+        }
 
         public static SchottFilter Combine(SchottFilter f1,
                                            double d1,

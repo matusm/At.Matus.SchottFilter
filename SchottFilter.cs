@@ -84,7 +84,7 @@ namespace At.Matus.SchottFilter
         private double ParseTraLine(string line)
         {
             if (string.IsNullOrWhiteSpace(line)) return double.NaN;
-            string[] separators = { " " };
+            string[] separators = { " ", "\t" };
             string[] tokens = line.Split(separators, StringSplitOptions.RemoveEmptyEntries);
             if (tokens.Length > 2) return double.NaN;
             string token = tokens.Last();

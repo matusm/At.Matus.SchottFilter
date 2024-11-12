@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace At.Matus.SchottFilter
+﻿namespace At.Matus.SchottFilter
 {
     public class FilterSpecification
     {
@@ -35,26 +29,40 @@ namespace At.Matus.SchottFilter
 
         public double Fitness(SchottFilter filter)
         {
-            double tauInBlockingRange = 0;
-            double tauInTransmissionRange = 0;
-            int numberInBlockingRange = 0;
-            int numberInTransmissionRange = 0;
+            double fitness = AverageTransmission(filter) / AverageBlocking(filter);
+            return fitness;
+        }
+
+        public double AverageTransmission(SchottFilter filter)
+        {
+            double sumTau = 0;
+            int count = 0;
+            for (int i = 0; i < fieldSize; i++)
+            {
+                double tau = filter.GetInternalTransmittance(i + minWavelength);
+                if (minimumPermissibleSpectralTransmittance[i] != 0)
+                {
+                    sumTau += tau;
+                    count++;
+                }
+            }
+            return sumTau / count;
+        }
+
+        public double AverageBlocking(SchottFilter filter)
+        {
+            double sumTau = 0;
+            int count = 0;
             for (int i = 0; i < fieldSize; i++)
             {
                 double tau = filter.GetInternalTransmittance(i + minWavelength);
                 if (maximumPermissibleSpectralTransmittance[i] != 1)
                 {
-                    tauInBlockingRange += tau;
-                    numberInBlockingRange++;
+                    sumTau += tau;
+                    count++;
                 }
-                if (minimumPermissibleSpectralTransmittance[i] != 0)
-                {
-                    tauInTransmissionRange += tau;
-                    numberInTransmissionRange++;
-                                }
             }
-            double fitness = (tauInTransmissionRange / numberInTransmissionRange) / (tauInBlockingRange / numberInBlockingRange);
-            return fitness;
+            return sumTau / count;
         }
 
         private void _SetMinimumPermissibleSpectralTransmittance(int lowerIdx, int upperIdx, double tau)
