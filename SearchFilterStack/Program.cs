@@ -23,8 +23,8 @@ namespace SearchFilterStack
             SchottFilter[] collection = LoadFilters(workingDirectory);
 
             FilterSpecification spec = new FilterSpecification();
-            spec.SetMinimumPermissibleSpectralTransmittance(350, 550, 0.30);
-            spec.SetMaximumPermissibleSpectralTransmittance(700, 1100, 0.01);
+            spec.SetPassRange(340, 550, 0.30);
+            spec.SetBlockingRange(650, 1100, 0.01);
 
             // single filter
             ResultPod[] singleFilter = Try1Filter(collection, spec);

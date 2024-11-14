@@ -12,9 +12,13 @@
             _SetMaximumPermissibleSpectralTransmittance(0, fieldSize, 1);
         }
 
-        public void SetMinimumPermissibleSpectralTransmittance(int lowerWavelength, int upperWavelength, double tau) => _SetMinimumPermissibleSpectralTransmittance(lowerWavelength - minWavelength, upperWavelength - minWavelength, tau);
+        public void SetPassRange(int lowerWavelength, int upperWavelength, double tau) => _SetMinimumPermissibleSpectralTransmittance(lowerWavelength - minWavelength, upperWavelength - minWavelength, tau);
 
-        public void SetMaximumPermissibleSpectralTransmittance(int lowerWavelength, int upperWavelength, double tau) => _SetMaximumPermissibleSpectralTransmittance(lowerWavelength - minWavelength, upperWavelength - minWavelength, tau);
+        public void SetBlockingRange(int lowerWavelength, int upperWavelength, double tau) => _SetMaximumPermissibleSpectralTransmittance(lowerWavelength - minWavelength, upperWavelength - minWavelength, tau);
+
+        //public void SetMinimumPermissibleSpectralTransmittance(int lowerWavelength, int upperWavelength, double tau) => _SetMinimumPermissibleSpectralTransmittance(lowerWavelength - minWavelength, upperWavelength - minWavelength, tau);
+
+        //public void SetMaximumPermissibleSpectralTransmittance(int lowerWavelength, int upperWavelength, double tau) => _SetMaximumPermissibleSpectralTransmittance(lowerWavelength - minWavelength, upperWavelength - minWavelength, tau);
 
         public bool Conforms(SchottFilter filter)
         {
