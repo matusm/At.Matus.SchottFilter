@@ -23,8 +23,8 @@ namespace SearchFilterStack
             SchottFilter[] collection = LoadFilters(workingDirectory);
 
             FilterSpecification spec = new FilterSpecification();
-            spec.SetMinimumPermissibleSpectralTransmittance(340, 500, 0.35);
-            spec.SetMaximumPermissibleSpectralTransmittance(850, 1100, 0.01);
+            spec.SetMinimumPermissibleSpectralTransmittance(350, 550, 0.30);
+            spec.SetMaximumPermissibleSpectralTransmittance(700, 1100, 0.01);
 
             // single filter
             ResultPod[] singleFilter = Try1Filter(collection, spec);
@@ -32,6 +32,7 @@ namespace SearchFilterStack
             {
                 Console.WriteLine($"{f}");
             }
+            if (singleFilter.Length == 0) Console.WriteLine("Specification not met with a single filter");
             Console.WriteLine();
 
             // two filters
@@ -40,6 +41,7 @@ namespace SearchFilterStack
             {
                 Console.WriteLine($"{f}");
             }
+            if (twoFilters.Length == 0) Console.WriteLine("Specification not met with two filters");
             Console.WriteLine();
 
             // three filters
@@ -48,6 +50,7 @@ namespace SearchFilterStack
             {
                 Console.WriteLine($"{f}");
             }
+            if (threeFilters.Length == 0) Console.WriteLine("Specification not met with three filters");
             Console.WriteLine();
         }
 

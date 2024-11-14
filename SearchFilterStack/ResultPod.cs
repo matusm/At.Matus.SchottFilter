@@ -22,7 +22,7 @@ namespace SearchFilterStack
             TauBlock = tauBlock;
         }
 
-        public override string ToString() => $"{Designation}  {Fitness:F0}  {TauPass * 100:F1}%  {TauBlock * 100:F3}%";
+        public override string ToString() => $"[{Designation}]    {Fitness:F0} {TauPass * 100:F0}% {TauBlock * 100:F3}%";
 
         public int CompareTo(ResultPod other)
         {
