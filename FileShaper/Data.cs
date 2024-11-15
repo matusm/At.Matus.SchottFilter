@@ -10,7 +10,10 @@ namespace FileShaper
             
         private readonly List<TraValue> spectralTransmission = new List<TraValue>();
 
-        public void AddValue(TraValue point) => spectralTransmission.Add(point);
-
+        public void AddValue(TraValue point)
+        {
+            if (double.IsNaN(point.Transmittance)) point.Transmittance = 0;
+            spectralTransmission.Add(point);
+        }
     }
 }
