@@ -2,7 +2,7 @@
 
 namespace FileShaper
 {
-    public class Data
+    public class FilterData
     {
         public double ReferenceThickness { get; set; } = double.NaN;
         public double ReflectionFactor { get; set; } = double.NaN;
@@ -12,7 +12,7 @@ namespace FileShaper
 
         public void AddValue(TraValue point)
         {
-            if (double.IsNaN(point.Transmittance)) point.Transmittance = 0;
+            if (double.IsNaN(point.Y)) point.Y = 0;
             spectralTransmission.Add(point);
         }
     }

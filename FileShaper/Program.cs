@@ -1,8 +1,29 @@
-﻿using System;
-using System.Collections.Generic;
+﻿//****************************************************************************************
+//
+// Quick and dirty!
+// Command line app to convert CSV files to the legacy Schott filter transmission format.
+//
+// Usage:
+// 1.) Extract the respective filter data from the Schott catalogue
+//     (SCHOTT-filter-glass_2024-2-en.xlsx)
+// 2.) Save this data (2 columns + matadata) as a separate EXCEL file with the
+//     filter designation as filename, e.g. BG23.xlsx
+// 3.) Batch convert these EXCEL files in csv format using the following tool:
+//     http://stackoverflow.com/a/11252731/715608
+//     https://gist.github.com/tonyerskine/77250575b166bec997f33a679a0dfbe4
+// 4.) Put these csv files to a working directory and execute this app.
+//     The resulting *.tra files can be used by the SchotFilter class
+// 
+// The csv file format structure is hardwired in the code.
+// Future releases of the Schott catalogue may require code change.
+// 
+// Author: Michael Matus, 2024
+//
+//****************************************************************************************
+
+using System;
 using System.Globalization;
 using System.IO;
-using System.Linq;
 
 namespace FileShaper
 {
@@ -11,25 +32,26 @@ namespace FileShaper
         static void Main(string[] args)
         {
             CultureInfo.CurrentCulture = CultureInfo.InvariantCulture;
+            // the working directory must be hard coded!
             string workingDirectory = @"C:\Users\User\OneDrive\temp";
             string[] filenames = Directory.GetFiles(workingDirectory, @"*.csv");
             Array.Sort(filenames);
-            foreach (string fn in filenames)
+
+            foreach (string filename in filenames)
             {
-                string baseFilename = Path.GetFileNameWithoutExtension(Path.GetFileNameWithoutExtension(fn));
+                string baseFilename = Path.GetFileNameWithoutExtension(Path.GetFileNameWithoutExtension(filename)); // BG14.xlsx.csv => BG14
                 string outFilename = Path.ChangeExtension(baseFilename, ".tra");
                 string outputPath = Path.Combine(workingDirectory, outFilename);
 
-                Data data = LoadCsvFile(fn);
+                FilterData data = LoadCsvFile(filename);
                 WriteTraFile(data, outputPath);
                 Console.WriteLine(outFilename);
-
             }
         }
 
         /********************************************************************************************************/
 
-        static void WriteTraFile(Data data, string outputPath)
+        private static void WriteTraFile(FilterData data, string outputPath)
         {
             using(StreamWriter outFile = new StreamWriter(outputPath, false))
             {
@@ -37,16 +59,16 @@ namespace FileShaper
                 outFile.WriteLine($"{data.ReflectionFactor}");
                 foreach (var v in data.SpectralTransmission)
                 {
-                    outFile.WriteLine($"{v.Wavelength:F0}  {v.Transmittance}");
+                    outFile.WriteLine($"{v.X:F0}  {v.Y}");
                 }
             }
         }
 
         /********************************************************************************************************/
 
-        static Data LoadCsvFile(string filename)
+        private static FilterData LoadCsvFile(string filename)
         {
-            Data data = new Data();
+            FilterData data = new FilterData();
             using (StreamReader srCsvFile = File.OpenText(filename))
             {
                 int lineIndex = 0;
@@ -54,8 +76,8 @@ namespace FileShaper
                 while ((csvLine = srCsvFile.ReadLine()) != null)
                 {
                     lineIndex++;
-                    if (lineIndex == 6) data.ReferenceThickness = ParseCsvLine(csvLine).Transmittance;
-                    if (lineIndex == 5) data.ReflectionFactor = ParseCsvLine(csvLine).Transmittance;
+                    if (lineIndex == 6) data.ReferenceThickness = ParseCsvLine(csvLine).Y;
+                    if (lineIndex == 5) data.ReflectionFactor = ParseCsvLine(csvLine).Y;
                     if (lineIndex > 8 && lineIndex < 910)
                         data.AddValue(ParseCsvLine(csvLine));
                 }
@@ -65,7 +87,7 @@ namespace FileShaper
 
         /********************************************************************************************************/
 
-        static TraValue ParseCsvLine(string line)
+        private static TraValue ParseCsvLine(string line)
         {
             if (string.IsNullOrWhiteSpace(line)) 
                 return new TraValue();
