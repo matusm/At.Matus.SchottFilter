@@ -45,6 +45,7 @@
     <Compile Include="FilterSpecification.cs" />
     <Compile Include="SchottFilter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SpecificationRange.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -16,18 +16,32 @@ namespace SearchFilterStack
         {
             CultureInfo.CurrentCulture = CultureInfo.InvariantCulture;
 
-            string workingDirectory = @"C:\Users\User\source\repos\At.Matus.SchottFilter\data";
-            //string workingDirectory = @"/Volumes/NO NAME/LaserModData/S01/T020S01.csv";
+            string workingDirectory = @"C:\Users\User\source\repos\At.Matus.SchottFilter\data\portfolio";
             //string workingDirectory = Directory.GetCurrentDirectory();
 
-            SchottFilter[] collection = LoadFilters(workingDirectory);
+            SchottFilter[] catalog = LoadFilters(workingDirectory);
 
             FilterSpecification spec = new FilterSpecification();
-            spec.SetPassRange(340, 550, 0.30);
-            spec.SetBlockingRange(650, 1100, 0.01);
+            spec.SetPassRange(340, 435, 0.35);
+            spec.SetBlockingRange(470, 1100, 0.002);
+
+            // some diagnostic output
+            Console.WriteLine($"Filter catalog: {workingDirectory}");
+            Console.WriteLine($"Number of filters: {catalog.Length}");
+            Console.WriteLine($"Thickness from {minD} to {maxD} @ {deltaD} mm");
+            Console.WriteLine($"Specification");
+            foreach (SpecificationRange r in spec.PassBands)
+            {
+                Console.WriteLine($"   pass band      {r}");
+            }
+            foreach (SpecificationRange r in spec.BlockingBands)
+            {
+                Console.WriteLine($"   blocking band  {r}");
+            }
+            Console.WriteLine();
 
             // single filter
-            ResultPod[] singleFilter = Try1Filter(collection, spec);
+            ResultPod[] singleFilter = Try1Filter(catalog, spec);
             foreach (var f in singleFilter)
             {
                 Console.WriteLine($"{f}");
@@ -36,7 +50,7 @@ namespace SearchFilterStack
             Console.WriteLine();
 
             // two filters
-            ResultPod[] twoFilters = Try2Filters(collection, spec);
+            ResultPod[] twoFilters = Try2Filters(catalog, spec);
             foreach (var f in twoFilters)
             {
                 Console.WriteLine($"{f}");
@@ -45,7 +59,7 @@ namespace SearchFilterStack
             Console.WriteLine();
 
             // three filters
-            ResultPod[] threeFilters = Try3Filters(collection, spec);
+            ResultPod[] threeFilters = Try3Filters(catalog, spec);
             foreach (var f in threeFilters)
             {
                 Console.WriteLine($"{f}");

@@ -6,6 +6,7 @@
 // Usage:
 // 1.) Extract the respective filter data from the Schott catalogue
 //     (SCHOTT-filter-glass_2024-2-en.xlsx)
+//     https://www.schott.com/en-gb/products/optical-filter-glass-p1000266/downloads
 // 2.) Save this data (2 columns + matadata) as a separate EXCEL file with the
 //     filter designation as filename, e.g. BG23.xlsx
 // 3.) Batch convert these EXCEL files in csv format using the following tool:

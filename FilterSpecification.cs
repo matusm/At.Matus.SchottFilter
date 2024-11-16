@@ -1,10 +1,11 @@
-﻿namespace At.Matus.SchottFilter
+﻿using System.Collections.Generic;
+
+namespace At.Matus.SchottFilter
 {
     public class FilterSpecification
     {
-        private const int fieldSize = 901;
-        private const int minWavelength = 200;  // nm
-        private const int maxWavelength = 1100; // nm
+        public SpecificationRange[] PassBands => passBands.ToArray();
+        public SpecificationRange[] BlockingBands => blockingBands.ToArray();
 
         public FilterSpecification()
         {
@@ -12,13 +13,17 @@
             _SetMaximumPermissibleSpectralTransmittance(0, fieldSize, 1);
         }
 
-        public void SetPassRange(int lowerWavelength, int upperWavelength, double tau) => _SetMinimumPermissibleSpectralTransmittance(lowerWavelength - minWavelength, upperWavelength - minWavelength, tau);
+        public void SetPassRange(int lowerWavelength, int upperWavelength, double tau)
+        {
+            _SetMinimumPermissibleSpectralTransmittance(lowerWavelength - minWavelength, upperWavelength - minWavelength, tau);
+            passBands.Add(new SpecificationRange(lowerWavelength, upperWavelength, tau));
+        }
 
-        public void SetBlockingRange(int lowerWavelength, int upperWavelength, double tau) => _SetMaximumPermissibleSpectralTransmittance(lowerWavelength - minWavelength, upperWavelength - minWavelength, tau);
-
-        //public void SetMinimumPermissibleSpectralTransmittance(int lowerWavelength, int upperWavelength, double tau) => _SetMinimumPermissibleSpectralTransmittance(lowerWavelength - minWavelength, upperWavelength - minWavelength, tau);
-
-        //public void SetMaximumPermissibleSpectralTransmittance(int lowerWavelength, int upperWavelength, double tau) => _SetMaximumPermissibleSpectralTransmittance(lowerWavelength - minWavelength, upperWavelength - minWavelength, tau);
+        public void SetBlockingRange(int lowerWavelength, int upperWavelength, double tau)
+        {
+            _SetMaximumPermissibleSpectralTransmittance(lowerWavelength - minWavelength, upperWavelength - minWavelength, tau);
+            blockingBands.Add(new SpecificationRange(lowerWavelength, upperWavelength, tau));
+        }
 
         public bool Conforms(SchottFilter filter)
         {
@@ -93,5 +98,12 @@
 
         private readonly double[] maximumPermissibleSpectralTransmittance = new double[fieldSize];
         private readonly double[] minimumPermissibleSpectralTransmittance = new double[fieldSize];
+        private readonly List<SpecificationRange> passBands = new List<SpecificationRange>();
+        private readonly List<SpecificationRange> blockingBands = new List<SpecificationRange>();
+
+        private const int fieldSize = 901;
+        private const int minWavelength = 200;  // nm
+        private const int maxWavelength = 1100; // nm
+
     }
 }
