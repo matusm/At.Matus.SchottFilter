@@ -8,22 +8,24 @@ namespace SearchFilterStack
 {
     class Program
     {
-        static double minD = 1;
-        static double maxD = 3;
-        static double deltaD = 1;
+        static double minD = 2;
+        static double maxD = 2;
+        static double deltaD = 2;
 
         static void Main(string[] args)
         {
             CultureInfo.CurrentCulture = CultureInfo.InvariantCulture;
 
-            string workingDirectory = @"C:\Users\User\source\repos\At.Matus.SchottFilter\data\portfolio";
+            string workingDirectory = @"C:\Users\User\source\repos\At.Matus.SchottFilter\data\Thorlabs";
             //string workingDirectory = Directory.GetCurrentDirectory();
 
             SchottFilter[] catalog = LoadFilters(workingDirectory);
 
             FilterSpecification spec = new FilterSpecification();
-            spec.SetPassRange(340, 435, 0.35);
-            spec.SetBlockingRange(470, 1100, 0.002);
+            spec.SetPassRange(340, 438, 0.30);
+            spec.SetBlockingRange(490, 1100, 0.01);
+            //spec.SetPassRange(490, 1100, 0.30);
+            //spec.SetBlockingRange(340, 438, 0.01);
 
             // some diagnostic output
             Console.WriteLine($"Filter catalog: {workingDirectory}");
@@ -101,18 +103,18 @@ namespace SearchFilterStack
             return cf.ToArray();
         }
 
-        static ResultPod[] Try2Filters(SchottFilter[] filterSet, FilterSpecification spec)
+        static ResultPod[] Try2Filters(SchottFilter[] catalog, FilterSpecification spec)
         {
             List<ResultPod> cf = new List<ResultPod>();
-            for (int i = 0; i < filterSet.Length; i++)
+            for (int i = 0; i < catalog.Length; i++)
             {
-                for (int j = i + 1; j < filterSet.Length; j++)
+                for (int j = i + 1; j < catalog.Length; j++)
                 {
                     for (double d1 = minD; d1 <= maxD; d1 += deltaD)
                     {
                         for (double d2 = minD; d2 <= maxD; d2 += deltaD)
                         {
-                            var combination = FilterMath.Combine(filterSet[i], d1, filterSet[j], d2);
+                            var combination = FilterMath.Combine(catalog[i], d1, catalog[j], d2);
                             if (spec.Conforms(combination))
                             {
                                 cf.Add(new ResultPod(combination, spec.Fitness(combination), spec.AverageTransmission(combination), spec.AverageBlocking(combination)));
@@ -126,22 +128,22 @@ namespace SearchFilterStack
             return cf.ToArray();
         }
 
-        static ResultPod[] Try3Filters(SchottFilter[] filterSet, FilterSpecification spec)
+        static ResultPod[] Try3Filters(SchottFilter[] catalog, FilterSpecification spec)
         {
             List<ResultPod> cf = new List<ResultPod>();
-            for (int i = 0; i < filterSet.Length; i++)
+            for (int i = 0; i < catalog.Length; i++)
             {
-                for (int j = i + 1; j < filterSet.Length; j++)
+                for (int j = i + 1; j < catalog.Length; j++)
                 {
-                    for (int k = j + 1; k < filterSet.Length; k++)
+                    for (int k = j + 1; k < catalog.Length; k++)
                     {
                         for (double d1 = minD; d1 <= maxD; d1 += deltaD)
                         {
                             for (double d2 = minD; d2 <= maxD; d2 += deltaD)
                             {
-                                for (double d3 = minD; d3 < maxD; d3 += deltaD)
+                                for (double d3 = minD; d3 <= maxD; d3 += deltaD)
                                 {
-                                    var combination = FilterMath.Combine(filterSet[i], d1, filterSet[j], d2, filterSet[k], d3);
+                                    SchottFilter combination = FilterMath.Combine(catalog[i], d1, catalog[j], d2, catalog[k], d3);
                                     if (spec.Conforms(combination))
                                     {
                                         cf.Add(new ResultPod(combination, spec.Fitness(combination), spec.AverageTransmission(combination), spec.AverageBlocking(combination)));

@@ -12,7 +12,7 @@ namespace FileShaper
 
         public void AddValue(TraValue point)
         {
-            if (double.IsNaN(point.Y)) point.Y = 0;
+            if (double.IsNaN(point.Y)) point.Y = 1e-10;
             spectralTransmission.Add(point);
         }
     }

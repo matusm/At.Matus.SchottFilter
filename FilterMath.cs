@@ -79,5 +79,9 @@ namespace At.Matus.SchottFilter
             filter.ReflectionFactor = (f1.ReflectionFactor + f2.ReflectionFactor + f3.ReflectionFactor + f4.ReflectionFactor + f5.ReflectionFactor) / 5; // verkittet!
             return filter;
         }
+
+
+        public static SchottFilter Combine(SchottFilter f1, SchottFilter f2) => Combine(f1, f1.Thickness, f2, f2.Thickness);
+
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using At.Matus.StatisticPod;
+using System.Collections.Generic;
 
 namespace At.Matus.SchottFilter
 {
@@ -38,41 +39,51 @@ namespace At.Matus.SchottFilter
 
         public double Fitness(SchottFilter filter)
         {
-            double fitness = AverageTransmission(filter) / AverageBlocking(filter);
+            StatisticPod.StatisticPod pa = PassParameters(filter);
+            StatisticPod.StatisticPod bl = BlockParameters(filter);
+            // parameters which may be used to construct a fitness function
+            double averagePass = pa.AverageValue*100;
+            double maxPass = pa.MaximumValue*100;
+            double minPas = pa.MinimumValue*100;
+            double averageBlock = bl.AverageValue*100;
+            double maxBlock = bl.MaximumValue*100;
+            double minBlock = bl.MinimumValue*100;
+            // this is the fitness function
+            double fitness = averagePass / (maxBlock);
             return fitness;
         }
 
-        public double AverageTransmission(SchottFilter filter)
+        public StatisticPod.StatisticPod PassParameters(SchottFilter filter)
         {
-            double sumTau = 0;
-            int count = 0;
+            StatisticPod.StatisticPod passStat = new StatisticPod.StatisticPod();
             for (int i = 0; i < fieldSize; i++)
             {
                 double tau = filter.GetInternalTransmittance(i + minWavelength);
                 if (minimumPermissibleSpectralTransmittance[i] != 0)
                 {
-                    sumTau += tau;
-                    count++;
+                    passStat.Update(tau);
                 }
             }
-            return sumTau / count;
+            return passStat;
         }
 
-        public double AverageBlocking(SchottFilter filter)
+        public StatisticPod.StatisticPod BlockParameters(SchottFilter filter)
         {
-            double sumTau = 0;
-            int count = 0;
+            StatisticPod.StatisticPod blockStat = new StatisticPod.StatisticPod();
             for (int i = 0; i < fieldSize; i++)
             {
                 double tau = filter.GetInternalTransmittance(i + minWavelength);
                 if (maximumPermissibleSpectralTransmittance[i] != 1)
                 {
-                    sumTau += tau;
-                    count++;
+                    blockStat.Update(tau);
                 }
             }
-            return sumTau / count;
+            return blockStat;
         }
+
+        public double AverageTransmission(SchottFilter filter) => PassParameters(filter).AverageValue;
+
+        public double AverageBlocking(SchottFilter filter) => BlockParameters(filter).AverageValue;
 
         private void _SetMinimumPermissibleSpectralTransmittance(int lowerIdx, int upperIdx, double tau)
         {

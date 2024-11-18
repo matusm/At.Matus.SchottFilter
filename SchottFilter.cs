@@ -13,7 +13,6 @@ namespace At.Matus.SchottFilter
         public double Thickness => ReferenceThickness; // in mm
         public double ReflectionFactor { get; internal set; } = double.NaN;
 
-
         public SchottFilter(string fromFilename)
         {
             Designation = GetDesignationFromFilename(fromFilename);
