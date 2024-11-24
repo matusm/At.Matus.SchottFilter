@@ -8,15 +8,15 @@ namespace SearchFilterStack
 {
     class Program
     {
-        static double minD = 2;
-        static double maxD = 2;
-        static double deltaD = 2;
+        static double minD = 1;
+        static double maxD = 3;
+        static double deltaD = 1;
 
         static void Main(string[] args)
         {
             CultureInfo.CurrentCulture = CultureInfo.InvariantCulture;
 
-            string workingDirectory = @"C:\Users\User\source\repos\At.Matus.SchottFilter\data\Thorlabs";
+            string workingDirectory = @"C:\Users\User\source\repos\At.Matus.SchottFilter\catalogs\Hoya";
             //string workingDirectory = Directory.GetCurrentDirectory();
 
             SchottFilter[] catalog = LoadFilters(workingDirectory);
