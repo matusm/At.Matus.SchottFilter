@@ -80,8 +80,11 @@ namespace At.Matus.SchottFilter
             return filter;
         }
 
-
+        public static SchottFilter Combine(SchottFilter f1) => Combine(f1, f1.Thickness);
         public static SchottFilter Combine(SchottFilter f1, SchottFilter f2) => Combine(f1, f1.Thickness, f2, f2.Thickness);
+        public static SchottFilter Combine(SchottFilter f1, SchottFilter f2, SchottFilter f3) => Combine(f1, f1.Thickness, f2, f2.Thickness, f3, f3.Thickness);
+        public static SchottFilter Combine(SchottFilter f1, SchottFilter f2, SchottFilter f3, SchottFilter f4) => Combine(f1, f1.Thickness, f2, f2.Thickness, f3, f3.Thickness, f4, f4.Thickness);
+        public static SchottFilter Combine(SchottFilter f1, SchottFilter f2, SchottFilter f3, SchottFilter f4, SchottFilter f5) => Combine(f1, f1.Thickness, f2, f2.Thickness, f3, f3.Thickness, f4, f4.Thickness, f5, f5.Thickness);
 
     }
 }
