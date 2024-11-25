@@ -8,23 +8,16 @@ namespace SearchFilterStack
 {
     class Program
     {
-        static double minD = 1;
-        static double maxD = 3;
-        static double deltaD = 1;
-
         static void Main(string[] args)
         {
             CultureInfo.CurrentCulture = CultureInfo.InvariantCulture;
 
-            string workingDirectory = @"C:\Users\User\source\repos\At.Matus.SchottFilter\catalogs\Schott\positiveList2024";
-            //string workingDirectory = Directory.GetCurrentDirectory();
-
+            string workingDirectory = @"C:\Users\User\source\repos\At.Matus.SchottFilter\catalogs\Thorlabs";
             SchottFilter[] catalog = LoadFilters(workingDirectory);
-            ThicknessField dRange = new ThicknessField(FieldType.Intrinsic);
-
+            ThicknessField dRange = new ThicknessField(2);
             FilterSpecification spec = new FilterSpecification();
             spec.SetPassRange(340, 438, 0.30);
-            spec.SetBlockingRange(475, 1100, 0.01);
+            spec.SetBlockingRange(500, 1100, 0.01);
             //spec.SetPassRange(490, 1100, 0.30);
             //spec.SetBlockingRange(340, 438, 0.01);
 
@@ -51,7 +44,7 @@ namespace SearchFilterStack
             Console.WriteLine();
 
             // single filter
-            ResultPod[] singleFilter = Try1Filter(catalog, spec);
+            ResultPod[] singleFilter = Try1Filter(catalog, spec, dRange);
             foreach (var f in singleFilter)
             {
                 Console.WriteLine($"{f}");
@@ -60,7 +53,7 @@ namespace SearchFilterStack
             Console.WriteLine();
 
             // two filters
-            ResultPod[] twoFilters = Try2Filters(catalog, spec);
+            ResultPod[] twoFilters = Try2Filters(catalog, spec, dRange);
             foreach (var f in twoFilters)
             {
                 Console.WriteLine($"{f}");
@@ -69,7 +62,7 @@ namespace SearchFilterStack
             Console.WriteLine();
 
             // three filters
-            ResultPod[] threeFilters = Try3Filters(catalog, spec);
+            ResultPod[] threeFilters = Try3Filters(catalog, spec, dRange);
             foreach (var f in threeFilters)
             {
                 Console.WriteLine($"{f}");
@@ -92,17 +85,29 @@ namespace SearchFilterStack
             return filters.ToArray();
         }
 
-        static ResultPod[] Try1Filter(SchottFilter[] filterSet, FilterSpecification spec)
+        static ResultPod[] Try1Filter(SchottFilter[] catalog, FilterSpecification spec, ThicknessField d)
         {
+            SchottFilter combination;
             List<ResultPod> cf = new List<ResultPod>();
-            for (int i = 0; i < filterSet.Length; i++)
+            for (int i = 0; i < catalog.Length; i++)
             {
-                for (double d1 = minD; d1 <= maxD; d1 += deltaD)
+                if (d.UseIntrinsic)
                 {
-                    SchottFilter combination = FilterMath.Combine(filterSet[i], d1);
+                    combination = FilterMath.Combine(catalog[i]);
                     if (spec.Conforms(combination))
                     {
                         cf.Add(new ResultPod(combination, spec.Fitness(combination), spec.AverageTransmission(combination), spec.AverageBlocking(combination)));
+                    }
+                }
+                else
+                {
+                    for (double d1 = d.MinimumThickness; d1 <= d.MaximumThickness; d1 += d.DeltaThickness)
+                    {
+                        combination = FilterMath.Combine(catalog[i], d1);
+                        if (spec.Conforms(combination))
+                        {
+                            cf.Add(new ResultPod(combination, spec.Fitness(combination), spec.AverageTransmission(combination), spec.AverageBlocking(combination)));
+                        }
                     }
                 }
             }
@@ -111,21 +116,34 @@ namespace SearchFilterStack
             return cf.ToArray();
         }
 
-        static ResultPod[] Try2Filters(SchottFilter[] catalog, FilterSpecification spec)
+        static ResultPod[] Try2Filters(SchottFilter[] catalog, FilterSpecification spec, ThicknessField d)
         {
+            SchottFilter combination;
             List<ResultPod> cf = new List<ResultPod>();
             for (int i = 0; i < catalog.Length; i++)
             {
                 for (int j = i + 1; j < catalog.Length; j++)
                 {
-                    for (double d1 = minD; d1 <= maxD; d1 += deltaD)
+                    if (d.UseIntrinsic)
                     {
-                        for (double d2 = minD; d2 <= maxD; d2 += deltaD)
+                        combination = FilterMath.Combine(catalog[i], catalog[j]);
+                        if (spec.Conforms(combination))
                         {
-                            SchottFilter combination = FilterMath.Combine(catalog[i], d1, catalog[j], d2);
-                            if (spec.Conforms(combination))
+                            cf.Add(new ResultPod(combination, spec.Fitness(combination), spec.AverageTransmission(combination), spec.AverageBlocking(combination)));
+                        }
+
+                    }
+                    else
+                    {
+                        for (double d1 = d.MinimumThickness; d1 <= d.MaximumThickness; d1 += d.DeltaThickness)
+                        {
+                            for (double d2 = d.MinimumThickness; d2 <= d.MaximumThickness; d2 += d.DeltaThickness)
                             {
-                                cf.Add(new ResultPod(combination, spec.Fitness(combination), spec.AverageTransmission(combination), spec.AverageBlocking(combination)));
+                                combination = FilterMath.Combine(catalog[i], d1, catalog[j], d2);
+                                if (spec.Conforms(combination))
+                                {
+                                    cf.Add(new ResultPod(combination, spec.Fitness(combination), spec.AverageTransmission(combination), spec.AverageBlocking(combination)));
+                                }
                             }
                         }
                     }
@@ -136,26 +154,37 @@ namespace SearchFilterStack
             return cf.ToArray();
         }
 
-        static ResultPod[] Try3Filters(SchottFilter[] catalog, FilterSpecification spec)
+        static ResultPod[] Try3Filters(SchottFilter[] catalog, FilterSpecification spec, ThicknessField d)
         {
-            List<ResultPod> cf = new List<ResultPod>();
             SchottFilter combination;
+            List<ResultPod> cf = new List<ResultPod>();
             for (int i = 0; i < catalog.Length; i++)
             {
                 for (int j = i + 1; j < catalog.Length; j++)
                 {
                     for (int k = j + 1; k < catalog.Length; k++)
                     {
-                        for (double d1 = minD; d1 <= maxD; d1 += deltaD)
+                        if (d.UseIntrinsic)
                         {
-                            for (double d2 = minD; d2 <= maxD; d2 += deltaD)
+                            combination = FilterMath.Combine(catalog[i], catalog[j], catalog[k]);
+                            if (spec.Conforms(combination))
                             {
-                                for (double d3 = minD; d3 <= maxD; d3 += deltaD)
+                                cf.Add(new ResultPod(combination, spec.Fitness(combination), spec.AverageTransmission(combination), spec.AverageBlocking(combination)));
+                            }
+                        }
+                        else
+                        {
+                            for (double d1 = d.MinimumThickness; d1 <= d.MaximumThickness; d1 += d.DeltaThickness)
+                            {
+                                for (double d2 = d.MinimumThickness; d2 <= d.MaximumThickness; d2 += d.DeltaThickness)
                                 {
-                                    combination = FilterMath.Combine(catalog[i], d1, catalog[j], d2, catalog[k], d3);
-                                    if (spec.Conforms(combination))
+                                    for (double d3 = d.MinimumThickness; d3 <= d.MaximumThickness; d3 += d.DeltaThickness)
                                     {
-                                        cf.Add(new ResultPod(combination, spec.Fitness(combination), spec.AverageTransmission(combination), spec.AverageBlocking(combination)));
+                                        combination = FilterMath.Combine(catalog[i], d1, catalog[j], d2, catalog[k], d3);
+                                        if (spec.Conforms(combination))
+                                        {
+                                            cf.Add(new ResultPod(combination, spec.Fitness(combination), spec.AverageTransmission(combination), spec.AverageBlocking(combination)));
+                                        }
                                     }
                                 }
                             }

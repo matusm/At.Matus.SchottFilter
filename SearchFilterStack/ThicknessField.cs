@@ -18,6 +18,8 @@
             DeltaThickness = delta;
         }
 
+        public ThicknessField(double d) : this(d, d, d) { }
+
         public ThicknessField(FieldType type) => Type = type;
     }
 
