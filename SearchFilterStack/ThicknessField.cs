@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace SearchFilterStack
+﻿namespace SearchFilterStack
 {
     public class ThicknessField
     {
@@ -12,6 +6,7 @@ namespace SearchFilterStack
         public double MaximumThickness { get; } = 3;
         public double DeltaThickness { get; } = 1;
         public FieldType Type { get; }
+        public bool UseIntrinsic => Type == FieldType.Intrinsic;
 
         public ThicknessField() => Type = FieldType.Default;
 
@@ -24,7 +19,6 @@ namespace SearchFilterStack
         }
 
         public ThicknessField(FieldType type) => Type = type;
-
     }
 
     public enum FieldType
