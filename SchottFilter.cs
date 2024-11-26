@@ -53,7 +53,7 @@ namespace At.Matus.SchottFilter
             sb.AppendLine($"{ReferenceThickness:F3}"); // the thickness in mm, resolution 1 µm
             sb.AppendLine($"{ReflectionFactor:F5}");   // the (combined) reflection factor
             for (int i = 0; i < internalSpectralTransmittance.Length; i++)
-                sb.AppendLine($"{i + 200,4} {internalSpectralTransmittance[i]:F8}");
+                sb.AppendLine($"{i + 200,4} {internalSpectralTransmittance[i]}");
             return sb.ToString();
         }
 

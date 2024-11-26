@@ -28,7 +28,7 @@ using System.IO;
 
 namespace FileShaper
 {
-    class Program
+    class FS_Program
     {
         static void Main(string[] args)
         {

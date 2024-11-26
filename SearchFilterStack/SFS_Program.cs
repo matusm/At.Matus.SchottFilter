@@ -6,7 +6,7 @@ using System.IO;
 
 namespace SearchFilterStack
 {
-    class Program
+    class SFS_Program
     {
         static void Main(string[] args)
         {
@@ -14,10 +14,12 @@ namespace SearchFilterStack
 
             string workingDirectory = @"C:\Users\User\source\repos\At.Matus.SchottFilter\catalogs\Thorlabs";
             SchottFilter[] catalog = LoadFilters(workingDirectory);
-            ThicknessField dRange = new ThicknessField(2);
+            ThicknessField dRange = new ThicknessField(FieldType.Intrinsic);
             FilterSpecification spec = new FilterSpecification();
-            spec.SetPassRange(340, 438, 0.30);
-            spec.SetBlockingRange(500, 1100, 0.01);
+            spec.SetPassRange(340, 500, 0.30);
+            spec.SetBlockingRange(650, 1100, 0.01);
+            //spec.SetPassRange(340, 438, 0.50);
+            //spec.SetBlockingRange(490, 1100, 0.01);
             //spec.SetPassRange(490, 1100, 0.30);
             //spec.SetBlockingRange(340, 438, 0.01);
 

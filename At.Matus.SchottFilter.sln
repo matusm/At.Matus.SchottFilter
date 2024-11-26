@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SearchFilterStack", "Search
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileShaper", "FileShaper\FileShaper.csproj", "{E70C82A5-6A19-4FFF-AB03-C58BC9A2124D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ref_d", "Ref_d\Ref_d.csproj", "{60734E42-A19E-4380-BC38-347295D7EB43}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{E70C82A5-6A19-4FFF-AB03-C58BC9A2124D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E70C82A5-6A19-4FFF-AB03-C58BC9A2124D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E70C82A5-6A19-4FFF-AB03-C58BC9A2124D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{60734E42-A19E-4380-BC38-347295D7EB43}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{60734E42-A19E-4380-BC38-347295D7EB43}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{60734E42-A19E-4380-BC38-347295D7EB43}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{60734E42-A19E-4380-BC38-347295D7EB43}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
