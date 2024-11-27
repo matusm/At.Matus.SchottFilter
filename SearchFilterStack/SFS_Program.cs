@@ -14,11 +14,13 @@ namespace SearchFilterStack
             CultureInfo.CurrentCulture = CultureInfo.InvariantCulture;
 
             #region Set parameters for analysis
-            string workingDirectory = @"C:\Users\User\source\repos\At.Matus.SchottFilter\catalogs\Thorlabs";
-            ThicknessField dRange = new ThicknessField(FieldType.Intrinsic);
+            string outFilename = "SP_Hoya_01.prn";
+            string title = "Shortpass filter for array spectrometer";
+            string workingDirectory = @"C:\Users\User\source\repos\At.Matus.SchottFilter\catalogs\Hoya";
+            ThicknessField dRange = new ThicknessField(1, 3, 1);
             FilterSpecification spec = new FilterSpecification();
-            spec.SetPassRange(340, 438, 0.30);
-            spec.SetBlockingRange(550, 1100, 0.01);
+            spec.SetPassRange(345, 438, 0.55);
+            spec.SetBlockingRange(525, 1100, 0.01);
             #endregion
 
             SchottFilter[] catalog = LoadFilters(workingDirectory);
@@ -55,16 +57,17 @@ namespace SearchFilterStack
                 string AppName = System.Reflection.Assembly.GetExecutingAssembly().GetName().Name;
                 string AppVer = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
                 sb.AppendLine($"{AppName} version {AppVer}");
-                sb.AppendLine();
+                sb.AppendLine($"Title: {title}");
+                sb.AppendLine($"Result file: {outFilename}");
                 sb.AppendLine($"Filter catalog: {workingDirectory}");
                 sb.AppendLine($"Number of filters: {catalog.Length}");
                 if (dRange.Type == FieldType.Intrinsic)
                 {
-                    sb.AppendLine($"Catalog intrinsic filter thicknesses.");
+                    sb.AppendLine($"Thickness probing range: Catalog values.");
                 }
                 else
                 {
-                    sb.AppendLine($"Thickness from {dRange.MinimumThickness} to {dRange.MaximumThickness} @ {dRange.DeltaThickness} mm");
+                    sb.AppendLine($"Thickness probing range: {dRange.MinimumThickness} to {dRange.MaximumThickness} @ {dRange.DeltaThickness} mm");
                 }
                 sb.AppendLine($"Specification");
                 foreach (SpecificationRange r in spec.PassBands)
