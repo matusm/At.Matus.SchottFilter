@@ -17,8 +17,8 @@ namespace SearchFilterStack
             string workingDirectory = @"C:\Users\User\source\repos\At.Matus.SchottFilter\catalogs\Thorlabs";
             ThicknessField dRange = new ThicknessField(FieldType.Intrinsic);
             FilterSpecification spec = new FilterSpecification();
-            spec.SetPassRange(340, 450, 0.30);
-            spec.SetBlockingRange(650, 1100, 0.01);
+            spec.SetPassRange(340, 438, 0.30);
+            spec.SetBlockingRange(550, 1100, 0.01);
             #endregion
 
             SchottFilter[] catalog = LoadFilters(workingDirectory);
@@ -40,8 +40,12 @@ namespace SearchFilterStack
             ResultPod[] threeFilters = Try3Filters(catalog, spec, dRange);
             Console.WriteLine(ResultText(threeFilters));
 
-            Console.WriteLine($"Found filter combinations: {singleFilter.Length+twoFilters.Length+threeFilters.Length}");
+            // four filters
+            Console.WriteLine("Four filters");
+            ResultPod[] fourFilters = Try4Filters(catalog, spec, dRange);
+            Console.WriteLine(ResultText(fourFilters));
 
+            Console.WriteLine($"Found filter combinations: {singleFilter.Length + twoFilters.Length + threeFilters.Length + fourFilters.Length}");
             Console.WriteLine();
             
             //===========================================//
@@ -79,7 +83,7 @@ namespace SearchFilterStack
             {
                 StringBuilder sb = new StringBuilder();
                 if (result.Length == 0)
-                    sb.AppendLine("   ---");
+                    sb.AppendLine("   [---]");
                 foreach (var f in result)
                     sb.AppendLine($"   {f}");
                 return sb.ToString();
@@ -213,6 +217,54 @@ namespace SearchFilterStack
             return cf.ToArray();
         }
 
+        static ResultPod[] Try4Filters(SchottFilter[] catalog, FilterSpecification spec, ThicknessField d)
+        {
+            SchottFilter combination;
+            List<ResultPod> cf = new List<ResultPod>();
+            for (int i = 0; i < catalog.Length; i++)
+            {
+                for (int j = i + 1; j < catalog.Length; j++)
+                {
+                    for (int k = j + 1; k < catalog.Length; k++)
+                    {
+                        for (int m = k + 1; m < catalog.Length; m++)
+                        {
+                            if (d.UseIntrinsic)
+                            {
+                                combination = FilterMath.Combine(catalog[i], catalog[j], catalog[k], catalog[m]);
+                                if (spec.Conforms(combination))
+                                {
+                                    cf.Add(new ResultPod(combination, spec.Fitness(combination), spec.AverageTransmission(combination), spec.AverageBlocking(combination)));
+                                }
+                            }
+                            else
+                            {
+                                for (double d1 = d.MinimumThickness; d1 <= d.MaximumThickness; d1 += d.DeltaThickness)
+                                {
+                                    for (double d2 = d.MinimumThickness; d2 <= d.MaximumThickness; d2 += d.DeltaThickness)
+                                    {
+                                        for (double d3 = d.MinimumThickness; d3 <= d.MaximumThickness; d3 += d.DeltaThickness)
+                                        {
+                                            for (double d4 = d.MinimumThickness; d4 <= d.MaximumThickness; d4 += d.DeltaThickness)
+                                            {
+                                                combination = FilterMath.Combine(catalog[i], d1, catalog[j], d2, catalog[k], d3, catalog[m], d4);
+                                                if (spec.Conforms(combination))
+                                                {
+                                                    cf.Add(new ResultPod(combination, spec.Fitness(combination), spec.AverageTransmission(combination), spec.AverageBlocking(combination)));
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            cf.Sort();
+            cf.Reverse();
+            return cf.ToArray();
+        }
     }
 
 }

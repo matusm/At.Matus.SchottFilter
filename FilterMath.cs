@@ -52,7 +52,7 @@ namespace At.Matus.SchottFilter
                                            double d4)
         {
             SchottFilter filter = Combine(f1, d1, f2, d2, f3, d3, f4, d4, new SchottFilter(), 0);
-            filter.Designation = $"{f1.Designation} : {d1:F2} mm + {f2.Designation} : {d2:F2} mm + {f3.Designation} : {d3:F2} mm + {f4.Designation} : {d4:F} mm";
+            filter.Designation = $"{f1.Designation} : {d1:F2} mm + {f2.Designation} : {d2:F2} mm + {f3.Designation} : {d3:F2} mm + {f4.Designation} : {d4:F2} mm";
             filter.ReflectionFactor = (f1.ReflectionFactor + f2.ReflectionFactor + f3.ReflectionFactor + f4.ReflectionFactor) / 4; // verkittet!
             return filter;
         }
