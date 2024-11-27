@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Text;
 
 namespace SearchFilterStack
 {
@@ -12,65 +13,78 @@ namespace SearchFilterStack
         {
             CultureInfo.CurrentCulture = CultureInfo.InvariantCulture;
 
+            #region Set parameters for analysis
             string workingDirectory = @"C:\Users\User\source\repos\At.Matus.SchottFilter\catalogs\Thorlabs";
-            SchottFilter[] catalog = LoadFilters(workingDirectory);
             ThicknessField dRange = new ThicknessField(FieldType.Intrinsic);
             FilterSpecification spec = new FilterSpecification();
-            spec.SetPassRange(340, 500, 0.30);
+            spec.SetPassRange(340, 450, 0.30);
             spec.SetBlockingRange(650, 1100, 0.01);
-            //spec.SetPassRange(340, 438, 0.50);
-            //spec.SetBlockingRange(490, 1100, 0.01);
-            //spec.SetPassRange(490, 1100, 0.30);
-            //spec.SetBlockingRange(340, 438, 0.01);
+            #endregion
 
-            // some diagnostic output
-            Console.WriteLine($"Filter catalog: {workingDirectory}");
-            Console.WriteLine($"Number of filters: {catalog.Length}");
-            if(dRange.Type==FieldType.Intrinsic)
-            {
-                Console.WriteLine($"Catalog intrinsic filter thicknesses.");
-            }
-            else
-            {
-                Console.WriteLine($"Thickness from {dRange.MinimumThickness} to {dRange.MaximumThickness} @ {dRange.DeltaThickness} mm");
-            }
-            Console.WriteLine($"Specification");
-            foreach (SpecificationRange r in spec.PassBands)
-            {
-                Console.WriteLine($"   pass band      {r}");
-            }
-            foreach (SpecificationRange r in spec.BlockingBands)
-            {
-                Console.WriteLine($"   blocking band  {r}");
-            }
-            Console.WriteLine();
+            SchottFilter[] catalog = LoadFilters(workingDirectory);
+
+            Console.WriteLine(HeaderText());
 
             // single filter
+            Console.WriteLine("Single filter");
             ResultPod[] singleFilter = Try1Filter(catalog, spec, dRange);
-            foreach (var f in singleFilter)
-            {
-                Console.WriteLine($"{f}");
-            }
-            if (singleFilter.Length == 0) Console.WriteLine("Specification not met with a single filter");
-            Console.WriteLine();
+            Console.WriteLine(ResultText(singleFilter));
 
             // two filters
+            Console.WriteLine("Two filters");
             ResultPod[] twoFilters = Try2Filters(catalog, spec, dRange);
-            foreach (var f in twoFilters)
-            {
-                Console.WriteLine($"{f}");
-            }
-            if (twoFilters.Length == 0) Console.WriteLine("Specification not met with two filters");
-            Console.WriteLine();
+            Console.WriteLine(ResultText(twoFilters));
 
             // three filters
+            Console.WriteLine("Three filters");
             ResultPod[] threeFilters = Try3Filters(catalog, spec, dRange);
-            foreach (var f in threeFilters)
-            {
-                Console.WriteLine($"{f}");
-            }
-            if (threeFilters.Length == 0) Console.WriteLine("Specification not met with three filters");
+            Console.WriteLine(ResultText(threeFilters));
+
+            Console.WriteLine($"Found filter combinations: {singleFilter.Length+twoFilters.Length+threeFilters.Length}");
+
             Console.WriteLine();
+            
+            //===========================================//
+            string HeaderText()
+            {
+                StringBuilder sb = new StringBuilder();
+                string AppName = System.Reflection.Assembly.GetExecutingAssembly().GetName().Name;
+                string AppVer = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
+                sb.AppendLine($"{AppName} version {AppVer}");
+                sb.AppendLine();
+                sb.AppendLine($"Filter catalog: {workingDirectory}");
+                sb.AppendLine($"Number of filters: {catalog.Length}");
+                if (dRange.Type == FieldType.Intrinsic)
+                {
+                    sb.AppendLine($"Catalog intrinsic filter thicknesses.");
+                }
+                else
+                {
+                    sb.AppendLine($"Thickness from {dRange.MinimumThickness} to {dRange.MaximumThickness} @ {dRange.DeltaThickness} mm");
+                }
+                sb.AppendLine($"Specification");
+                foreach (SpecificationRange r in spec.PassBands)
+                {
+                    sb.AppendLine($"   pass band      {r}");
+                }
+                foreach (SpecificationRange r in spec.BlockingBands)
+                {
+                    sb.AppendLine($"   blocking band  {r}");
+                }
+                sb.AppendLine();
+                return sb.ToString();
+            }
+            //===========================================//
+            string ResultText(ResultPod[] result)
+            {
+                StringBuilder sb = new StringBuilder();
+                if (result.Length == 0)
+                    sb.AppendLine("   ---");
+                foreach (var f in result)
+                    sb.AppendLine($"   {f}");
+                return sb.ToString();
+            }
+            //===========================================//
         }
 
         //=========================================================================================//
