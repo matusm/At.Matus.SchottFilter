@@ -44,12 +44,12 @@ namespace At.Matus.SchottFilter
             // parameters which may be used to construct a fitness function
             double averagePass = pa.AverageValue*100;
             double maxPass = pa.MaximumValue*100;
-            double minPas = pa.MinimumValue*100;
+            double minPass = pa.MinimumValue*100;
             double averageBlock = bl.AverageValue*100;
             double maxBlock = bl.MaximumValue*100;
             double minBlock = bl.MinimumValue*100;
             // this is the fitness function
-            double fitness = averagePass / (maxBlock);
+            double fitness = minPass;
             return fitness;
         }
 
