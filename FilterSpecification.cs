@@ -82,8 +82,11 @@ namespace At.Matus.SchottFilter
         }
 
         public double AverageTransmission(SchottFilter filter) => PassParameters(filter).AverageValue;
-
         public double AverageBlocking(SchottFilter filter) => BlockParameters(filter).AverageValue;
+        public double MinimumTransmission(SchottFilter filter) => PassParameters(filter).MinimumValue;
+        public double MinimumBlocking(SchottFilter filter) => BlockParameters(filter).MinimumValue;
+        public double MaximumTransmission(SchottFilter filter) => PassParameters(filter).MaximumValue;
+        public double MaximumBlocking(SchottFilter filter) => BlockParameters(filter).MaximumValue;
 
         private void _SetMinimumPermissibleSpectralTransmittance(int lowerIdx, int upperIdx, double tau)
         {
