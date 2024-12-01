@@ -28,7 +28,7 @@ namespace SearchFilterStack
         }
 
         public override string ToString() => 
-            $"[{Designation}]    {Fitness:F0} PASS%({TauMinPass * 100:F0};{TauAvaPass * 100:F0};{TauMaxPass * 100:F0}) BLOCK%({TauMinBlock * 100:F3};{TauAvaBlock * 100:F3};{TauMaxBlock * 100:F3})";
+            $"[{Designation}]    {Fitness:F0} PASS%({TauMinPass * 100:F0};{TauAvaPass * 100:F0};{TauMaxPass * 100:F0}) BLOCK%({TauMinBlock * 100:F2};{TauAvaBlock * 100:F2};{TauMaxBlock * 100:F2})";
 
         public int CompareTo(ResultPod other)
         {

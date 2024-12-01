@@ -14,16 +14,19 @@ namespace SearchFilterStack
             CultureInfo.CurrentCulture = CultureInfo.InvariantCulture;
 
             #region Set parameters for analysis
-            string outFilename = "SP01_Schott.prn";
-            string title = "Shortpass filter for array spectrometer";
-            string workingDirectory = @"C:\Users\User\source\repos\At.Matus.SchottFilter\catalogs\Schott\positiveList2024";
-            ThicknessField dRange = new ThicknessField(1,3,1);
+
+            string outFilename = "Thorlabs_Bpass_ADblock.prn";
+            string title = "Bandpass filter for array spectrometer";
+            string workingDirectory = @"C:\Users\User\source\repos\At.Matus.SchottFilter\catalogs\Thorlabs";
+            ThicknessField dRange = new ThicknessField(FieldType.Intrinsic);
             FilterSpecification spec = new FilterSpecification();
-            spec.SetPassRange(345, 438, 0.55);
-            spec.SetBlockingRange(525, 1100, 0.01);
+            spec.SetPassRange(438, 525, 0.40);
+            spec.SetBlockingRange(340, 400, 0.01);
+            spec.SetBlockingRange(612, 1100, 0.01);
+
             #endregion
 
-            StreamWriter streamWriter = new StreamWriter(outFilename, true);
+            StreamWriter streamWriter = new StreamWriter(outFilename, false);
             SchottFilter[] catalog = LoadFilters(workingDirectory);
 
             LogAndDisplay(HeaderText());
@@ -241,6 +244,7 @@ namespace SearchFilterStack
 
         static ResultPod[] Try4Filters(SchottFilter[] catalog, FilterSpecification specs, ThicknessField d)
         {
+            long iterations = 0;
             SchottFilter combination;
             List<ResultPod> cf = new List<ResultPod>();
             for (int i = 0; i < catalog.Length; i++)
@@ -253,6 +257,7 @@ namespace SearchFilterStack
                         {
                             if (d.UseIntrinsic)
                             {
+                                iterations++;
                                 combination = FilterMath.Combine(catalog[i], catalog[j], catalog[k], catalog[m]);
                                 if (specs.Conforms(combination))
                                 {
@@ -269,6 +274,7 @@ namespace SearchFilterStack
                                         {
                                             for (double d4 = d.MinimumThickness; d4 <= d.MaximumThickness; d4 += d.DeltaThickness)
                                             {
+                                                iterations++;
                                                 combination = FilterMath.Combine(catalog[i], d1, catalog[j], d2, catalog[k], d3, catalog[m], d4);
                                                 if (specs.Conforms(combination))
                                                 {
